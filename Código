@@ -1,0 +1,561 @@
+AndroidManifest.xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.segundatentativa"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="21"
+        android:targetSdkVersion="31" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MyApplication" >
+        <activity
+            android:name=".MainActivity"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
+
+
+MainActivity.kt
+
+package com.segundatentativa
+
+import android.app.Activity
+import android.os.Bundle
+import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+
+public class MainActivity : Activity() {
+	
+	private lateinit var binding: ActivityMainBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+         super.onCreate(savedInstanceState)
+         setContentView(R.layout.activity_main)
+         enableEdgeToEdge()
+        setContent {
+            TodoListBaseTheme {
+				Box (modifier = Modifier.safeDrawingPadding())
+                TodoNavHost()
+            }
+        }
+    }
+}
+    }
+}
+
+Todo.kt
+
+package com.segundatentativa.domain
+
+
+
+data class todo1 {
+	val id: Long
+	val title: String
+	val description: String?
+	val isCompleted: Boolean
+	
+}
+
+data class todo2 {
+	val id2: Long
+	val title2: String
+	val description2: String?
+	val isCompleted: Boolean
+}
+
+
+
+data class todo3 {
+	val id3: Long
+	val title3: String
+	val description3: String?
+	val isCompleted3: Boolean
+}
+
+
+val todo1 = Todo (
+ id = 1 
+ title = "Todo 1"
+ description = "Description for Todo 1"
+ isCompleted = false
+
+
+)
+
+val todo2 = Todo (
+id = 2 
+title = "Todo 2"
+description = "Descrition for Todo 2"
+isCompleted = true
+)
+
+val todo3 = Todo (
+id = 3
+title = "Todo 3"
+descripition = "Description for Todo 3"
+isCompleted = false 
+)
+
+ListScreen.kt 
+
+package com.segundatentativa
+
+import android.compose.runtime.Composable
+import android.compose.ui.Modifier
+
+
+@Composable
+
+fun ListScreen() {
+	ListContent(todo = emptyList())
+	
+}
+
+@Composable
+fun ListContent (
+     todo: List<Todo>
+    Scaffold (
+	floatingActionButton = {
+		FloatingActionButton (onClick = {})
+			Icon (Icons.Default.Add, contentDesccription = "Add")
+			
+	
+	) {  paddingValues 	
+		
+		 LazyColumn (
+		modifier = Modifier
+		.consumeWindowInsets(paddingValues),
+		.contentPadding = PaddingValues(16.dp)
+				
+		) { itemIndexed (todo){ index, todo	
+			TodoItem(
+			todo = todo,
+			onCompletedChange = {},
+			onItemClick = {},
+			onDeleteClick = {},
+				)
+			if (index < todo.lastIndex)
+			{Spacer (modifier = Modifier.height(8.dp))
+				}
+	}
+
+
+}
+@Preview
+@Composable
+private fun ListContentPreview () {
+	ToDoTheme {
+		ListContent(
+		todos = listOf (
+		todo1
+		todo2
+		todo3 
+		  )
+		)
+	}
+}
+
+AddEditScreen.kt
+
+package com.segudatentativa
+
+import android.compose.runtime.Composable
+import android.compose.ui.Modifier
+import android.compose.ui.tooLing.preview.Preview
+
+@Composable
+fun AddEditScreen() {
+	
+	
+}
+
+@Composable
+fun AddEditContent() {
+	Scaffold (
+	floatingActionButton = {
+		FloatingActionButton (onClick = {})
+			Icon (Icons.Default.Check, contentDesccription = "Save")
+			
+				Column (
+				   modifier = Modifier
+				   .consumeWindowInsets(it)
+				   .padding(16.dp)
+				) {
+					OutLineTextField(
+					modifier = Modifier
+					.fillMaxwWdth(),
+					value ="" , 
+					onValueChange= {},
+						placeholder{
+							Text(text = "Title")
+						}
+						)
+				}
+				
+				Spacer(modifier = Modifier.width(16.dp)
+				
+				Column (
+				   modifier = Modifier
+				   .consumeWindowInsets(it)
+				   .padding(it)
+				) {
+					OutLineTextField(
+					modifier = Modifier
+					.fillMaxwWdth(),
+					value ="" , 
+					onValueChange= {},
+						placeholder{
+							Text(text = "Description(optional)")
+						}
+						)
+				}
+				
+			
+}
+	
+	
+@Preview
+@Composable
+private fun AddEditContentPreview () {
+	TodoListTheme{
+		AddEditContent()
+		}
+}
+
+Todoitems.kt 
+
+package com.segundatentativa.domain
+
+import android.compose.runtime.Composable
+import android.compose.ui.Modifier
+
+@Composable 
+
+fun TodoItem(
+        todo: Todo, 
+		onCompletedChange: (Boolean) -> Unit, 
+		onItemClick: () -> Unit,
+		onDeletecClick: () -> Unit
+		modifier: Modifier = Modifier) 
+		{
+	Surface (
+		onClick = onItemClick
+		modifier = modifier,
+		shape = MaterialTheme.shape.medium,
+		shadowElevation = 2.dp,
+		border = BorderStroke (
+		width = 1.dp,
+		color = MaterialTheme.colorScreen.outline
+		)
+		Row (
+		      modifier = Modifier
+			  .padding(16.dp)
+			  verticalAligment = Aligment.CenterVertically
+		) {
+			Spacer(modifier = Modifier.width(8.dp))
+			
+			Checkbox(checked = todo.isCompleted, 
+			         onCheckedCharge = onCompletedChange
+					 
+					 )
+		}
+	
+	    Column (modifier = Modifier
+		        .weigth(1f)
+		
+		) {
+			Text (text = todo.title,
+			      style = MaterialTheme.typograhy.titleLarge
+			)
+			
+			todo.description?.let {
+				
+				Spacer(modifier = Modifier.height(8.dp))
+			Text (text = todo.description,
+			style = MaterialTheme.typograhy.bodyLarge
+			)
+				
+			}
+		}
+		
+		Spacer(modifier = Modifier.width(8.dp))
+			
+		
+		IconButton (
+		    onClick = onDeleteClick
+			) {
+				Icon(ImageVector = Icons.Default.Delete
+				contextDescription = "Delete")
+				
+		}
+	}
+		
+}
+
+@Preview
+@Composable
+private fun TodoItemPreview () {
+	
+	TodoListTheme {
+		Todoitem (
+		todo = todo1,
+		onCompletedCharge = {}, 
+		onItemClick = {},
+		onDeletecClick = {}
+		)
+		
+		}
+}
+
+@Preview
+@Composable
+private fun TodoItemCopletedPreview () {
+	TodoListTheme {
+		Todoitem (
+		todo = todo2,
+		onCompletedCharge = {} , 
+		onItemClick = {} ,
+		onDeletecClick = {}
+		)
+		
+		}
+}
+
+TodoNavHost.kt 
+
+package com.segundatentativa.domain
+
+import android.compose.runtime.Composable
+import android.compose.ui.Modifier
+
+	@Serializable
+object ListRoute
+
+@Serializable
+data class AddEditRoute(val id: Long? = null)
+
+@Composable
+fun TodoNavHost() {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = ListRoute) {
+        composable<ListRoute> {
+            ListScreen()
+        }
+
+        composable<AddEditRoute> { backStackEntry ->
+            val addEditRoute = backStackEntry.toRoute<AddEditRoute>()
+            AddEditScreen()
+        }
+    }
+}
+}
+
+@Composable
+fun ListScreen(
+    navigateToAddEditScreen: (id: Long?) -> Unit,
+) {
+    ListContent(
+        todos = emptyList(),
+        onAddItemClick = {
+            navigateToAddEditScreen(null)
+        }
+    )
+}
+
+@Composable
+fun ListContent(
+    todos: List<Todo>,
+    onAddItemClick: () -> Unit,
+) {
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    onAddItemClick()
+                }
+            ) {
+                Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
+            }
+        }
+    ) {
+        ...
+    }
+}
+
+@Preview
+@Composable
+private fun ListContentPreview() {
+    TodoListBaseTheme {
+        ListContent(
+            todos = listOf(
+                todo1,
+                todo2,
+                todo3,
+            ),
+            onAddItemClick = {},
+        )
+    }
+}
+
+...
+
+@Composable
+fun TodoNavHost() {
+   ...
+    NavHost(navController = navController, startDestination = ListRoute) {
+        composable<ListRoute> {
+            ListScreen(
+                navigateToAddEditScreen = { id ->
+                    navController.navigate(AddEditRoute(id))
+                }
+            )
+        }
+
+        ...
+    }
+}
+
+
+TodoEntity.kt 
+
+package com.segundatentativa.domain
+
+@Entity(tableName = "todos")
+data class TodoEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val title: String,
+    val description: String?,
+    val isCompleted: Boolean,
+)
+
+
+
+TodoDao.kt
+
+package com.segundatentativa.domain
+
+@Dao
+interface TodoDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(entity: TodoEntity)
+
+    @Delete
+    suspend fun delete(entity: TodoEntity)
+
+    @Query("SELECT * FROM todos")
+    fun getAll(): Flow<List<TodoEntity>>
+
+    @Query("SELECT * FROM todos WHERE id = :id")
+    suspend fun getBy(id: Long): TodoEntity?
+}
+
+@Database(
+    entities = [TodoEntity::class],
+    version = 1,
+)
+abstract class TodoDatabase : RoomDatabase() {
+
+    abstract val dao: TodoDao
+}
+
+object TodoDatabaseProvider {
+
+    @Volatile
+    private var INSTANCE: TodoDatabase? = null
+
+    fun provide(context: Context): TodoDatabase {
+        return INSTANCE ?: synchronized(this) {
+            val instance = Room.databaseBuilder(
+                context.applicationContext,
+                TodoDatabase::class.java,
+                "todo-app"
+            ).build()
+            INSTANCE = instance
+            instance
+        }
+    }
+}
+
+interface TodoRepository {
+
+    suspend fun insert(title: String, description: String?)
+    
+    suspend fun updateCompleted(id: Long, isCompleted: Boolean)
+
+    suspend fun delete(id: Long)
+
+    fun getAll(): Flow<List<Todo>>
+
+    suspend fun getBy(id: Long): Todo?
+}
+
+class TodoRepositoryImpl(
+    private val dao: TodoDao,
+) : TodoRepository {
+
+    override suspend fun insert(title: String, description: String?) {
+        val entity = TodoEntity(
+            title = title,
+            description = description,
+            isCompleted = false,
+        )
+
+        dao.insert(entity)
+    }
+    
+    override suspend fun updateCompleted(id: Long, isCompleted: Boolean) {
+        val existentEntity = dao.getBy(id) ?: return
+        val updatedEntity = existentEntity.copy(isCompleted = isCompleted)
+        dao.insert(updatedEntity)
+    }
+
+    override suspend fun delete(id: Long) {
+        val existentEntity = dao.getBy(id) ?: return
+        dao.delete(existentEntity)
+    }
+
+    override fun getAll(): Flow<List<Todo>> {
+        return dao.getAll().map {
+            it.map { entity ->
+                Todo(
+                    id = entity.id,
+                    title = entity.title,
+                    description = entity.description,
+                    isCompleted = entity.isCompleted
+                )
+            }
+        }
+    }
+
+    override suspend fun getBy(id: Long): Todo? {
+        return dao.getBy(id)?.let { entity ->
+            Todo(
+                id = entity.id,
+                title = entity.title,
+                description = entity.description,
+                isCompleted = entity.isCompleted
+            )
+        }
+    }
+}
+
+
+
+
